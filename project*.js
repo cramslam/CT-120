@@ -1,7 +1,9 @@
 // ============================================================
-// WATER CLOCK - v1.3
-// changes: remembered to start to document, + adjusting project 6 addition
+// WATER CLOCK - v1.3.2
+// changes: updated debug time
 // ============================================================
+
+let debug = true
 
 function setup() {
   createCanvas(400, 400);
@@ -61,8 +63,10 @@ function draw() {
     ellipse (x, y, 10);
   }
   
-  fill(100);
-  textSize(20);
-  text(`debug current time: ${h}:${m}:${s}`, 20, 70);
-  
+  // [DEBUG] show time
+  if (debug) {
+    fill(255, 85);
+    textSize(11);
+    text(`time: ${nf(h,2)}:${nf(m,2)}:${nf(s,2)}`, 10, 394);
+  }
 }
