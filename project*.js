@@ -1,6 +1,6 @@
 // ============================================================
-// WATER CLOCK - v1.3.2
-// changes: updated debug time
+// WATER CLOCK - v1.3.3
+// changes: remembered to document again
 // ============================================================
 
 let debug = true
@@ -67,6 +67,7 @@ function draw() {
   if (debug) {
     fill(255, 85);
     textSize(11);
+    // changed to use nf so it's visually consistent & string
     text(`time: ${nf(h,2)}:${nf(m,2)}:${nf(s,2)}`, 10, 394);
   }
 }
