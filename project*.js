@@ -1,13 +1,20 @@
 // ============================================================
-// WATER CLOCK - v1.3.3
-// changes: remembered to document again
+// WATER CLOCK - v1.4
+// changes: added debug time slider, sun that arcs across sky, and organized
 // ============================================================
 
-let debug = true
+// [DEBUG] set to false to use real clock
+let usedebugtime = true;
+let debugslider;
 
 function setup() {
   createCanvas(400, 400);
   noStroke();
+
+  // [DEBUG] time slider
+  debugslider = createSlider(0, 0.9999, 0.5, 0.001);
+  debugslider.position(10, 415);
+  debugslider.size(380);
 }
 
 function draw() {
@@ -20,9 +27,22 @@ function draw() {
   let totaltime = (h * 3600 ) + (m * 60) + s;
   
   let waterheight = map(totaltime, 0, 86400, height, 0);
-
+  
+// ---
+  
   // idea make sky change color over day
   let t = (h + m / 60.0) / 24.0;
+
+  // [DEBUG] override all time values with slider and replace w new t
+  if (usedebugtime) {
+    t           = debugslider.value();
+    totaltime   = t * 86400;
+    waterheight = map(totaltime, 0, 86400, height, 0);
+    h = floor(t * 24);
+    m = floor((t * 24 - h) * 60);
+    s = floor(((t * 24 - h) * 60 - m) * 60);
+  }
+
   let night = color(40, 30, 20);
   let dawn  = color(255, 120, 50);
   let day   = color(100, 180, 240);
@@ -37,8 +57,21 @@ function draw() {
   else if (t < 0.75) sky = lerpColor(day,   dusk, (t - 0.35) / 0.40);
   // dusk to night
   else               sky = lerpColor(dusk,  night,(t - 0.75) / 0.25);
-
   background(sky);
+
+// ---
+  
+  // idea: sun arcs left to right during day
+  // sin curve makes it peak at noon
+  if (t >= 0.20 && t <= 0.75) {
+    let sunProgress = map(t, 0.20, 0.75, 0, PI);
+    let sunX = map(t, 0.20, 0.75, 30, width - 30);
+    let sunY = map(sin(sunProgress), 0, 1, height * 0.70, height * 0.10);
+    fill(255, 235, 80, 230);
+    ellipse(sunX, sunY, 38, 38);
+  }
+
+// ---
   
   // idea make water actually water like
   fill (0, 150, 150, 150); 
@@ -62,9 +95,11 @@ function draw() {
     
     ellipse (x, y, 10);
   }
+
+// ---
   
   // [DEBUG] show time
-  if (debug) {
+  if (usedebugtime) {
     fill(255, 85);
     textSize(11);
     // changed to use nf so it's visually consistent & string
