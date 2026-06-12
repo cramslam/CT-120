@@ -1,6 +1,6 @@
 // ============================================================
-// WATER CLOCK - v1.4
-// changes: added debug time slider, sun that arcs across sky, and organized
+// WATER CLOCK - v1.5
+// changes: attempted to add the moon, also added "timestamps" in the comment barriers
 // ============================================================
 
 // [DEBUG] set to false to use real clock
@@ -28,7 +28,7 @@ function draw() {
   
   let waterheight = map(totaltime, 0, 86400, height, 0);
   
-// ---
+// < 1.0 ---
   
   // idea make sky change color over day
   let t = (h + m / 60.0) / 24.0;
@@ -59,7 +59,7 @@ function draw() {
   else               sky = lerpColor(dusk,  night,(t - 0.75) / 0.25);
   background(sky);
 
-// ---
+// 1.3 ---
   
   // idea: sun arcs left to right during day
   // sin curve makes it peak at noon
@@ -71,7 +71,19 @@ function draw() {
     ellipse(sunX, sunY, 38, 38);
   }
 
-// ---
+// 1.5 ---
+  
+// idea: moon follows the same logic
+// trying to figure out how to fix this only handles t > 0.75, so moon works at dusk but doesnt reappear until dusk again 
+if (t > 0.75 || t < 0.20) {
+  let nightT = (t - 0.75) / 0.45;
+  let moonX = map(nightT, 0, 1, 30, width - 30);
+  let moonY = map(sin(nightT * PI), 0, 1, height * 0.70, height * 0.10);
+  fill(220, 220, 200, 210);
+  ellipse(moonX, moonY, 28, 28);
+}
+  
+// < 1.0 ---
   
   // idea make water actually water like
   fill (0, 150, 150, 150); 
@@ -96,7 +108,7 @@ function draw() {
     ellipse (x, y, 10);
   }
 
-// ---
+// 1.3 ---
   
   // [DEBUG] show time
   if (usedebugtime) {
