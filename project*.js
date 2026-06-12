@@ -1,6 +1,6 @@
 // ============================================================
-// WATER CLOCK - v1.5
-// changes: attempted to add the moon, also added "timestamps" in the comment barriers
+// WATER CLOCK - v1.6
+// changes: fixed moon
 // ============================================================
 
 // [DEBUG] set to false to use real clock
@@ -71,17 +71,20 @@ function draw() {
     ellipse(sunX, sunY, 38, 38);
   }
 
-// 1.5 ---
+// 1.6 ---
   
-// idea: moon follows the same logic
-// trying to figure out how to fix this only handles t > 0.75, so moon works at dusk but doesnt reappear until dusk again 
-if (t > 0.75 || t < 0.20) {
-  let nightT = (t - 0.75) / 0.45;
-  let moonX = map(nightT, 0, 1, 30, width - 30);
-  let moonY = map(sin(nightT * PI), 0, 1, height * 0.70, height * 0.10);
-  fill(220, 220, 200, 210);
-  ellipse(moonX, moonY, 28, 28);
-}
+// idea: add moon 
+// night runs t=0.75 -> 1.0 -> 0.0 -> 0.20, total = 0.45
+  // nightT normalizes that whole stretch to 0->1, same trick as sky lerp zones
+  if (t < 0.20 || t > 0.75) {
+    let nightT;
+    if (t > 0.75) nightT = (t - 0.75) / 0.45;
+    else          nightT = (t + 0.25) / 0.45; // +0.25 offsets the evening portion
+    let moonX = map(nightT, 0, 1, 30, width - 30);
+    let moonY = map(sin(nightT * PI), 0, 1, height * 0.70, height * 0.10);
+    fill(220, 220, 200, 210);
+    ellipse(moonX, moonY, 28, 28);
+  }
   
 // < 1.0 ---
   
