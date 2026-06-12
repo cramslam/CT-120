@@ -1,6 +1,6 @@
 // ============================================================
-// WATER CLOCK - v1.7
-// changes: attempted to add stars
+// WATER CLOCK - v2.0
+// changes: stars fixed, and project in a decent state!
 // ============================================================
 
 // [DEBUG] set to false to use real clock
@@ -88,27 +88,27 @@ function draw() {
     ellipse(moonX, moonY, 28, 28);
   }
   
-// 1.7 ---
+// 2.0 ---
+  
   // idea: add stars at night that go transparent during day
-  // stars go crazy not sure why
+  // randomSeed() locks random() to same sequence every frame
+  // without it positions recalculate 60x a second = flickering
   if (showstars) {
     let starAlpha = 0;
-    if (t > 0.75)  starAlpha = map(t, 0.75, 0.85, 0, 180, true);
-    else if (t < 0.20) starAlpha = map(t, 0.10, 0.20, 180, 0, true);
+    // fade in after dusk, fade out before dawn
+    if (t > 0.75)       starAlpha = map(t, 0.75, 0.85, 0, 180, true);
+    else if (t < 0.20)  starAlpha = map(t, 0.10, 0.20, 180, 0, true);
+    // true in map() clamps it so alpha cant go negative or over 180
     if (starAlpha > 0) {
+      randomSeed(611); // any number works, just has to be the same number every frame
       for (let i = 0; i < 30; i++) {
         let sx = random(width);
-        let sy = random(height * 0.60); // tried height * 0.5 looked weird
+        let sy = random(height * 0.60);
         fill(255, 245, 200, starAlpha);
-        //fill(255,255,255, starAlpha); // this too
         ellipse(sx, sy, random(1.5, 3.5), random(1.5, 3.5));
-        // ellipse(sx, sy, 2, 2); // tried fixed size
       }
     }
   }
-  // why do they flicker ?? maybe too many
-  // tried i < 10 same problem
-  // tried i < 100 worse lol
   
 // < 1.0 ---
   
